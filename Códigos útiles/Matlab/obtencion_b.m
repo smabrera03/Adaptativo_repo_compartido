@@ -20,7 +20,8 @@ v0 = 0;
 
 %% Valores de b a probar (todos son modificables)
 valores_b = [0.1 0.2 0.3 0.4 0.5];
-
+%Nota: En taller de control nos había dado como 0.33, pero probablemente
+%estaba mal y fuera ~0.1
 %% Ángulo medido como entrada
 theta = @(tt) interp1(t,theta_b,tt,"linear","extrap");
 

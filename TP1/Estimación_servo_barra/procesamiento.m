@@ -18,6 +18,7 @@ legend('Medición', 'Teórico');
 xlabel('Ángulo del Servo [°]');
 xlim([-45, 60]);
 ylabel('Ángulo de la barra [°]');
+drawnow; 
 
 %Medición con datos de ida y de vuelta
 ang_servo_medicion1 = ang_servo;
@@ -41,4 +42,7 @@ xlabel('Ángulo del Servo [°]');
 xlim([-45, 60]);
 ylabel('Ángulo de la barra [°]');
 
-saveas(gcf, 'ang_s_vs_ang_b.pdf')
+fig2 = gcf;
+
+drawnow;
+exportgraphics(fig2, 'ang_s_vs_ang_b.pdf', 'ContentType', 'vector');
