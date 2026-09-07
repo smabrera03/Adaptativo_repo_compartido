@@ -1,3 +1,16 @@
+/*
+Explicación: 
+Este código da una serie de escalones de distintas alturas como entrada.
+
+Las alturas están en el vector escalones[]
+
+Cada escalón tiene una duración guardada en el vector duracion[]
+
+la variable indice_escalon va aumentando a medida que pasan los escalones
+
+Cuando se recorren todos los escalones, el código se queda en el último. 
+*/
+
 #include <NewPing.h>
 #include <Servo.h>
 #include <Adafruit_MPU6050.h>
@@ -16,7 +29,34 @@
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // Setup
 Servo miServo;
 Adafruit_MPU6050 mpu;
-float theta_bias = 0;
+//float theta_bias = 0;
+
+
+// ========================================00
+// Defino la secuencia de entrada
+// ==========================================
+
+float escalones [] = {
+  0, 30, 0, -30,
+  0, 20, 0, -20, 
+  0, 10, 0, -10, 
+  0
+};
+
+unsigned long duracion [] = { //Duración del escalón en ms
+  1000, 1000, 1000, 1000, 
+  1000, 1000, 1000, 1000, 
+  1000, 1000, 1000, 1000,
+  1000
+};
+
+//De esta forma, el escalon escalones[i] dura duracion[i]
+
+
+const int N_ESCALONES = sizeof(escalones) / sizeof(escalones[0]); //Cantidad de escalones
+int indice_escalon = 0; //Este indice va subiendo a medida que avancen los escalones
+unsigned long tiempo_inicio_escalon;
+
 
 void setup() {
   miServo.attach(9); // pin PWM
@@ -34,12 +74,21 @@ void setup() {
   mpu.setGyroRange(MPU6050_RANGE_500_DEG);
   mpu.setFilterBandwidth(MPU6050_BAND_44_HZ);
 
+  /*
+  //Comento esta parte porque este sesgo ya está contemplado en la función theta_b = phi(theta_s)
   sensors_event_t a, g, t;
   for(int i = 0; i < N_MUESTRAS; i++){ //Se calcula es sesgo como el promedio de (N_MUESTRAS) mediciones
     mpu.getEvent(&a, &g, &t);
     theta_bias += (180/PI) * atan2(a.acceleration.y, a.acceleration.z);
   }
   theta_bias/=N_MUESTRAS;
+  */
+
+  //Se comanda el primer escalón
+  float angulo = escalones[0];
+  int duty_cycle_servo = (int)mapFloat(angulo, -90, 90, 600, 2400);
+  miServo.writeMicroseconds(duty_cycle_servo);
+  tiempo_inicio_escalon = millis();
 }
 
 
@@ -56,7 +105,21 @@ void loop() {
   float posicion = posicion_carrito(); //medición en cm  
 
   //Servomotor
-  int angulo = 0;
+
+  //Lógica para actualizar el escalón.
+  if(millis() - tiempo_inicio_escalon >= duracion[indice_escalon]){
+    indice_escalon++;
+
+    if(indice_escalon >= N_ESCALONES){
+      indice_escalon = N_ESCALONES - 1; //Si termina la secuencia, se queda en el último escalón.
+      //Otra opcion sería indice_escalones = 0, y volver a empezar
+    }
+
+    tiempo_inicio_escalon = millis();
+  }
+
+  float angulo = escalones[indice_escalon];
+  
   if(angulo < ANGULO_SERVO_MIN){
     angulo = ANGULO_SERVO_MIN;
   } else if(angulo > ANGULO_SERVO_MAX){
@@ -70,12 +133,12 @@ void loop() {
   mpu.getEvent(&a, &g, &t);
   
 
-  theta_x_acc = (180/PI) * atan2(a.acceleration.y, a.acceleration.z) - theta_bias;
+  theta_x_acc = (180/PI) * atan2(a.acceleration.y, a.acceleration.z);
   theta_x_gyro_fc = theta_x_fc + (180/PI) * g.gyro.x * (PERIODO/1000000.0);
   
   theta_x_fc = alfa * theta_x_acc + (1 - alfa) * theta_x_gyro_fc;
 
-  float datos[3] = {theta_x_acc, theta_x_gyro_fc, theta_x_fc};
+  float datos[3] = {angulo, theta_x_fc, posicion};
   matlab_send(datos, 3);
 
   while (micros() - t_ini < PERIODO) {}
