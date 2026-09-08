@@ -36,21 +36,42 @@ Adafruit_MPU6050 mpu;
 // Defino la secuencia de entrada
 // ==========================================
 
+/*
+//Este par de vectores sirve para balancear el carrito, pero no para identificar b
 float escalones [] = {
-  0, 30, 0, -30,
+  0, 15, 0, -15, 
   0, 20, 0, -20, 
-  0, 10, 0, -10, 
   0
 };
 
 unsigned long duracion [] = { //Duración del escalón en ms
-  1000, 1000, 1000, 1000, 
-  1000, 1000, 1000, 1000, 
-  1000, 1000, 1000, 1000,
+  1000, 1500, 1000, 500, 
+  1000, 1000, 1000, 500,
   1000
+};
+*/
+
+/*
+//Estos valores corresponden a la medición b_izuquierda.mat
+float escalones [] = {
+  0, 20, 0
+};
+
+unsigned long duracion [] = {
+  50, 1000, 1000
+};
+*/
+
+float escalones [] = {
+  0, -17, 0
+};
+
+unsigned long duracion [] = {
+  50, 1000, 1000
 };
 
 //De esta forma, el escalon escalones[i] dura duracion[i]
+//Estos valores fueron encontrados por prueba y error, procurando mantener el carrito sobre la barra
 
 
 const int N_ESCALONES = sizeof(escalones) / sizeof(escalones[0]); //Cantidad de escalones
@@ -88,6 +109,7 @@ void setup() {
   float angulo = escalones[0];
   int duty_cycle_servo = (int)mapFloat(angulo, -90, 90, 600, 2400);
   miServo.writeMicroseconds(duty_cycle_servo);
+  delay(500);
   tiempo_inicio_escalon = millis();
 }
 

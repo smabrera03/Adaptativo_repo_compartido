@@ -2,49 +2,54 @@ clear;
 clc;
 close all;
 
-%% Datos experimentales
+% Datos experimentales
 %datos = readtable("archivo.xx");
-datos = load("archivo.mat");
+load("b_derecha.mat");
 
-%t = datos.t_ms/1000;              % Pasamos a segs
 t = t - t(1);
 
-theta_b = deg2rad(datos.theta_b_deg); % [rad] Pasamos los ángulos a rads
-x_med = datos.x_cm/100;               % [m] Pasamos a metros
+theta_b = deg2rad(ang_barra); % [rad] Pasamos los ángulos a rads
+theta_s = deg2rad(ang_servo);
+a0 = deg2rad(-3.9);
+a1 = 0.34;
+x_med = pos/100;               % [m] Pasamos a metros
 
-%% Parámetros
-m = xx;    % Masa en kg
+% Parámetros
+m = 33/1000;    % Masa en kg
 g = 9.8;      % [m/s^2]
 
 x0 = x_med(1);
 v0 = 0;
 
-%% Valores de b a probar (todos son modificables)
-valores_b = [0.1 0.2 0.3 0.4 0.5];
+% Valores de b a probar (todos son modificables)
+valores_b = [0.1, 0.2, 0.3];
 %Nota: En taller de control nos había dado como 0.33, pero probablemente
 %estaba mal y fuera ~0.1
-%% Ángulo medido como entrada
-theta = @(tt) interp1(t,theta_b,tt,"linear","extrap");
+% Ángulo medido como entrada
+theta_s = @(tt) interp1(t,theta_s,tt,"linear","extrap");
 
 %Acá es porque MATLAB solo tiene el ángulo en los instantes en los que Arduino tomó una muestra.
 %interp1 interpola entre las mediciones
-%% Gráfico
+% Gráfico
 figure;
 
 plot(t,x_med*100,"k","LineWidth",2);
 hold on;
 
+leyendas = ["Medición"];
+
 for b = valores_b
 
     modelo = @(tt,z) [
         z(2);
-        g*sin(theta(tt)) - (b/m)*z(2)
+        g*sin(a0 + a1*theta_s(tt)) - (b/m)*z(2)
     ];
 
     [~,z] = ode45(modelo,t,[x0;v0]);
 
     plot(t,z(:,1)*100,"LineWidth",1.2);
-
+    
+    leyendas(end+1) = sprintf("b = %.3f kg/s",b);
 end
 %z1 = x, z_2 = dot{x}= v
 
@@ -53,13 +58,11 @@ grid on;
 xlabel("Tiempo [s]");
 ylabel("Posición del carrito [cm]");
 
-legend( ...
-    "Medición", ...
-    "b = 0.1 kg/s", ...
-    "b = 0.2 kg/s", ...
-    "b = 0.3 kg/s", ...
-    "b = 0.4 kg/s", ...
-    "b = 0.5 kg/s", ...
-    "Location","best");
+legend(leyendas,"Location","best");
 
 title("Estimación aproximada del coeficiente de rozamiento");
+
+%{
+RESULTADOS:
+Con la medición b_izquierda obtengo b = 0.04 kg/s
+%}
