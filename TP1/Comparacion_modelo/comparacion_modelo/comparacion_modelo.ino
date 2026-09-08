@@ -51,10 +51,23 @@ unsigned long duracion [] = { //Duración del escalón en ms
 };
 */
 
+
 /*
 //Estos valores corresponden a la medición b_izuquierda.mat
 float escalones [] = {
   0, 20, 0
+};
+
+unsigned long duracion [] = {
+  50, 1250, 1000
+};
+*/
+
+
+/*
+//Estos valores corresponden a la medición b_derecha
+float escalones [] = {
+  0, -17, 0
 };
 
 unsigned long duracion [] = {
@@ -63,11 +76,13 @@ unsigned long duracion [] = {
 */
 
 float escalones [] = {
-  0, -17, 0
+  0, -10, 20, 
+  0
 };
 
 unsigned long duracion [] = {
-  50, 1000, 1000
+  20, 1000, 1000, 
+  1000
 };
 
 //De esta forma, el escalon escalones[i] dura duracion[i]
