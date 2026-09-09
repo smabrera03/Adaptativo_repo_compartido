@@ -10,6 +10,18 @@ x0 = [pos(1), 0];
 
 T_fin = t(end);
 
+figure;
+
+plot(t, ang_servo, 'k', 'LineWidth', 2);
+grid on;
+
+xlabel('Tiempo [s]');
+ylim([-15, 25]);
+ylabel('Ángulo comandado [°]');
+drawnow;
+
+exportgraphics(gcf, 'graficos/entrada_comparacion.pdf', 'ContentType', 'image', 'Resolution', 300);
+
 %% GRAFICOS
 
 x_modelo = double(out.x_modelo);
