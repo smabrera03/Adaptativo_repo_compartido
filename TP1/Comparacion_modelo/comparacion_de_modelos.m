@@ -1,4 +1,4 @@
-clear; clc, close all;
+%clear; clc, close all;
 
 load('datos_para_comparacion_v2.mat');
 
