@@ -1,6 +1,6 @@
 clear; clc, close all;
 
-load('Mediciones/medicion_v1.mat');
+load('Mediciones/medicion_v6.mat');
 
 %pos: posición del carro en cm
 
@@ -31,6 +31,7 @@ yline(m_pos - 3 * std_pos, 'r--', 'LineWidth', 2);
 
 title('Medición (transitorio ya descartado)');
 legend('Medicion', 'Media', 'Media + 3 * Desvío', 'Media - 3 * Desvío');
+xlim([0, 30]);
 grid on;
 
 
