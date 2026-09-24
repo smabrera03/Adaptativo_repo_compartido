@@ -30,4 +30,7 @@ Como la covarianza resta la media, en realidad estas viendo la relación entre l
 Obs: más que un ruido blanco u otro proceso, pareciera que la medición toma valores aleatorios discretos en torno a la media.
 En otras palabras: si X_k es una realización del ruido, X_k pertenece a un conjunto discreto de valores, no a un conjunto continuo.
 ¿Puedo modelar este ruido entonces como la salida de un filtro? ¿Por qué es las otras mediciones sí parece tomar valores en un continuo?
---> Tal vez tenga que ver con el hecho de que la barra está quieta. 
+--> Tal vez tenga que ver con el hecho de que la barra está quieta. No, con la barra en movimiento se ve más o menos lo mismo...
+
+NOTA: probé el sensor ultrasónico con una pelota de tenis y una de tenis de mesa. La de tenis de mesa tiene ruido, pero no mucho más que el carrito. La de tenis tiene un ruido tremendo, es inviable.
+

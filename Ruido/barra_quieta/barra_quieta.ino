@@ -40,6 +40,8 @@ void setup() {
     theta_bias += (180/PI) * atan2(a.acceleration.y, a.acceleration.z);
   }
   theta_bias/=N_MUESTRAS;
+  //No quiero considerar el sesgo:
+  theta_bias = 0.0;
 }
 
 
@@ -75,8 +77,8 @@ void loop() {
   
   theta_x_fc = alfa * theta_x_acc + (1 - alfa) * theta_x_gyro_fc;
 
-  float datos[1] = {posicion};
-  matlab_send(datos, 1);
+  float datos[3] = {posicion, angulo, theta_x_fc};
+  matlab_send(datos, 3);
 
   while (micros() - t_ini < PERIODO) {}
 }
