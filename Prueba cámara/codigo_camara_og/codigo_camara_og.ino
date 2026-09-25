@@ -16,15 +16,15 @@ const int IMAGE_WIDTH = 800;
 const int IMAGE_HEIGHT = 600;
 
 int roiWidth = 800;
-int roiHeight = 64;
-
+//int roiHeight = 64;
+int roiHeight = 128;
 // Vamos a detectar una BIC azul
 const uint32_t Nmin = 100;
 const uint32_t Nmax = 1000;
 const float circularityMax = 1.5;
-const uint8_t rMax = 10;
-const uint8_t gMax = 20;
-const uint8_t bMax = 100;
+const uint8_t rMin = 26;
+const uint8_t gMin = 28;
+const uint8_t bMax = 10;
 
 uint16_t *rgb565 = nullptr;
 
@@ -148,6 +148,9 @@ void handleCapture() {
 // ============================================================
 // HTTP /
 // ============================================================
+
+
+
 void handleRoot() {
   String html;
 
@@ -191,7 +194,6 @@ void handleRoot() {
 
   server.send(200, "text/html", html);
 }
-
 
 // ============================================================
 // HTTP
@@ -617,8 +619,8 @@ BallDetection detectBallRGB565(
   uint16_t *pixels,
   int roiWidth,
   int roiHeight,
-  uint8_t rMax,
-  uint8_t gMax,
+  uint8_t rMin,
+  uint8_t gMin,
   uint8_t bMax,
   uint32_t nmin,
   uint32_t nmax,
@@ -644,9 +646,9 @@ BallDetection detectBallRGB565(
       uint8_t g = (p >> 5) & 0x3F;
       uint8_t b = p & 0x1F;
 
-      if (r > rMax)
+      if (r < rMin)
         continue;
-      if (g > gMax)
+      if (g < gMin)
         continue;
       if (b > bMax)
         continue;
@@ -886,7 +888,7 @@ void loop() {
     BallDetection ball = detectBallRGB565(
       rgb565,
       roiWidth, roiHeight,
-      rMax, gMax, bMax,
+      rMin, gMin, bMax,
       Nmin, Nmax,
       circularityMax);
 
