@@ -1,0 +1,66 @@
+clear; clc, close all;
+
+load('Mediciones/medicion_v7.mat');
+
+%pos: posición del carro en cm
+
+N = length(pos);
+Ts = 0.02;
+fs = 1/Ts;
+
+m_pos = mean(pos);
+var_pos = var(pos);
+std_pos = std(pos);
+maximo = max(pos);
+minimo = min(pos);
+
+pos_c = pos - m_pos; %Señal centrada
+
+% Gráfico de la señal medida
+
+figure;
+plot(t, pos);
+xlabel('Tiempo [s]'); 
+ylabel('Posición medida [cm]');
+
+yline(m_pos, 'k--', 'LineWidth', 2);
+yline(m_pos + 3 * std_pos, 'r--', 'LineWidth', 2);
+yline(m_pos - 3 * std_pos, 'r--', 'LineWidth', 2);
+
+title('Medición (transitorio ya descartado)');
+legend('Medicion', 'Media', 'Media + 3 * Desvío', 'Media - 3 * Desvío');
+xlim([0, 30]);
+grid on;
+
+% HISTOGRAMA
+ANCHO_BIN = std_pos/4;
+
+figure;
+histogram(pos, 'Normalization', 'probability', 'BinWidth', ANCHO_BIN);
+xlabel('Posición'); ylabel('Proporción de observaciones');
+title('Histograma de la medición con bins de ancho', ANCHO_BIN);
+xline(minimo, 'r--');
+xline(maximo, 'r--');
+grid on;
+ 
+% Comparación contra una gaussiana con la media y varianza estimadas
+legend('Histograma', 'Mínimo', 'Máximo');
+
+
+
+%%
+%Según chat:
+valores = unique(pos);
+delta = diff(valores);
+
+figure;
+histogram(delta);
+grid on;
+xlabel('\Delta posición [cm]');
+ylabel('Cantidad');
+title('Diferencias entre niveles de cuantización');
+
+%{
+¿Puede el ruido ser una V.A. discreta? --> Aunque lo parezca, probablemente no. Lo que se ve es la cuantización del sensor, 
+no un ruido distribuido sobre un conjunto discreto.
+%}

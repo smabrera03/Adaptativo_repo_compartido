@@ -12,7 +12,11 @@ medicion_v5: medición hecha con el carro quieto a los -9 cm aprox. y con la bar
 
 medicion_v5: medición hecha con el carro quieto a los -15 cm aprox. y con la barra en movimiento. Se le comandaron al servo escalones de +/- 25° cada 5 segundos. Los primeros 60 segundos fueron suprimidos para eliminar el transitorio. Se guardaron 300 segundos.
 
+medicion_v6: medición hecha con el carro quieto a los 15 cm aprox. y con la barra en movimiento. Se le comandaron al servo escalones de +/- 25° cada 5 segundos. Los primeros 60 segundos fueron suprimidos para eliminar el transitorio. Se guardaron 300 segundos.
 
+medicion_v7: medición hecha con la bola naranja quieta aproximadamente en el centro de la barra y con la barra quieta. Los primeros 60 segundos fueron suprimidos para eliminar el transitorio. Se guardaron 300 segundos. 
+
+NOTA: La función posicion_carrito(); NO SIRVE para medir la posición real de la bola, xq fue hecha considerando la geometría del carrito. Sin embargo, sí sirve para el análisis del ruido
 
 Nota sobre la autocovarianza y la covarianza cruzada
 
@@ -33,4 +37,8 @@ En otras palabras: si X_k es una realización del ruido, X_k pertenece a un conj
 --> Tal vez tenga que ver con el hecho de que la barra está quieta. No, con la barra en movimiento se ve más o menos lo mismo...
 
 NOTA: probé el sensor ultrasónico con una pelota de tenis y una de tenis de mesa. La de tenis de mesa tiene ruido, pero no mucho más que el carrito. La de tenis tiene un ruido tremendo, es inviable.
+
+¿Puede el ruido ser una V.A. discreta? --> Aunque lo parezca, probablemente no. Lo que se ve es la cuantización del sensor, no un ruido distribuido sobre un conjunto discreto.
+
+
 

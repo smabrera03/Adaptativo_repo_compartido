@@ -1,6 +1,6 @@
 clear; clc, close all;
 
-load('Mediciones/medicion_v6.mat');
+load('Mediciones/medicion_v7.mat');
 
 %pos: posición del carro en cm
 
@@ -90,42 +90,19 @@ grid on;
 
 % 6) Densidad espectral de potencia (PSD)
  
-% --- 6a) Periodograma con ventana de Hann ---
-win = hann(N);
-[Pxx_hann, f_hann] = periodogram(pos_c, win, [], fs);
- 
+[P_welch, f_welch] = pwelch(pos_c, fs);
+%pwelch divide la muestra en varias secciones y calcula una PSD para cada
+%una. El resultado es el promedio de las PSD, lo que dismimuye la varianza.
 figure;
-semilogx(f_hann, 10*log10(Pxx_hann), 'LineWidth', 2); hold on;
-%xlim([min(f_hann), max(f_hann)]);
- 
-% --- 6b) Correlograma: DFT de la autocovarianza estimada ---
-% Se usa la autocovarianza completa (todos los lags posibles) para
-% mayor resolución en frecuencia
-[r_full, lags_full] = xcov(pos_c, N-1, 'biased');
-Phi = abs(fft(r_full)) * Ts;           % escalado según definición de DFT
-f_full = (0:N-2)/((2*N-1)*Ts);         % eje de frecuencias (mitad positiva)
-Nf = floor(length(Phi)/2);
- 
-%figure;
-semilogx(f_full(1:Nf), 10*log10(Phi(1:Nf)), 'LineWidth', 2);
+semilogx(f_welch, 10*log10(P_welch), 'LineWidth', 2); grid on;
 xlabel('Frecuencia [Hz]'); ylabel('PSD [dB]');
-xlim([min(f_full), max(f_full)]);
-legend('Periodograma con ventana de Hann', 'DFT de la autocorr', 'Location', 'SouthWest');
-title('PSD');
-grid on;
+xlim([min(f_welch), max(f_welch)]);
+%{
+¿Qué información me da la PSD?
+¿Por qué parece que el ruido tiene principalmente una componente de
+continua? ¿Será por la ventana?
 
-% --- 6c) Si está disponible, comparar con spa (System Identification Toolbox) ---
-
-figure;
-data = iddata(pos_c, [], Ts);
-ge = spa(data);
-f_spa = ge.Frequency;
-Pxx_spa = squeeze(ge.Spectrum);
-
-semilogx(f_spa, 10 * log10(Pxx_spa), 'LineWidth', 2);
-xlabel('Frecuencia [Hz]'); ylabel('PSD [dB]');
-grid on;
-
+%}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

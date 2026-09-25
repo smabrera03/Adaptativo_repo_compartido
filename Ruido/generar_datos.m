@@ -12,7 +12,7 @@ hechas con la barra quieta.
 
 
 
-ruta = 'Mediciones/medicion_v6';
+ruta = 'Mediciones/medicion_v7';
 
 t = double(out.tout);
 

@@ -1,5 +1,5 @@
 clear; clc; close all;
-load('Mediciones/medicion_v2');
+load('Mediciones/medicion_v7');
 
 figure;
 plot(t, pos); grid on;
