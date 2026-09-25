@@ -48,9 +48,9 @@ WebServer server(80);
 
 // Valores iniciales: se ajustaran con imagenes reales.
 
-const uint8_t R_MIN = 150;
-const uint8_t G_MAX = 110;
-const uint8_t B_MAX = 110;
+const uint8_t R_MIN = 26;
+const uint8_t G_MIN = 28;
+const uint8_t B_MAX = 1;
 
 const uint32_t N_MIN = 20;
 const uint32_t N_MAX = 15000;
@@ -116,10 +116,10 @@ Detection detectRedMarker(
 
       bool isRed =
         r >= R_MIN &&
-        g <= G_MAX &&
-        b <= B_MAX &&
-        r > g + 40 &&
-        r > b + 40;
+        g >= G_MIN &&
+        b <= B_MAX;
+        //r > g + 40 &&
+        //r > b + 40
 
       if (!isRed) {
         continue;
