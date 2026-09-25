@@ -12,12 +12,12 @@ hechas con la barra quieta.
 
 
 
-ruta = 'Mediciones/medicion_v7';
+ruta = 'Mediciones/medicion_v8';
 
 t = double(out.tout);
 
-T_MIN = 60; %Tiempo mínimo en segundos
-T_MAX = 360;
+T_MIN = 0; %Tiempo mínimo en segundos
+T_MAX = 4;
 
 indx = (T_MIN <= t) & (t < T_MAX);
 
