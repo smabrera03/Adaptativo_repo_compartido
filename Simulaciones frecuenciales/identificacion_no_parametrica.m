@@ -119,8 +119,10 @@ h_real = x_sol_impulso(:, 1); %respuesta al impulso según el modelo definido en
 
 %Estimación de la respuesta al impulso
 lags = 200; %lags a considerar
-R = covf([y u],lags+1);
-h_cor = R(2,:)'/R(4,1); %Respuesta al impulso estimada a partir de la correlación entre una entrada aleatoria y la salida producida por dicha entrada
+[h_cor, R, ~] = cra([y, u], lags, 20, 0);
+% R --> Matriz con autocovarianzas y covarianzas cruzadas
+% R(1, :) --> indices de lag || R(2, :) --> R_yy || R(3, :) --> R_uu || R(4, :) -->
+% R_yu ||
 
 % Comparación con la respuesta al impulso del modelo
 figure;
@@ -128,6 +130,8 @@ plot([h_real(1:lags) h_cor(1:lags)],'LineWidth',2);
 grid;
 legend('Respuesta al impulso','Estimación por correlación', 'Location', 'southeast')
 
+figure;
+cra(R);
 %¿Por qué arranca desde más abajo? --> Preguntarle a Pablo. ¿Está mal?
 
 %% Identificación no paramétrica en frecuencia
@@ -151,7 +155,10 @@ H_cor = frd(H_cor,w_cor);
 
 figure
 bode(w_cor,H_etfe,H_welch,H_cor)
-grid
+grid on;
+
+ylim([-360, 360]);
+
 legend('ETFE','Welch','Correlograma','Modelo')
 title('Espectros')
 h = findobj(gcf,'type','line');
