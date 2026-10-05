@@ -71,7 +71,7 @@ y_LA_id = detrend(y_LA,0);
 
 %% CORRELACION
 
-lags = 1600;
+lags = 200;
 [h_LA,R_LA,~] = cra([y_LA_id,u_LA_id],lags,20,0);
 
 %% Correlaciones normalizadas
@@ -80,8 +80,8 @@ lags_LA = R_LA(:,1);
 tau_LA = lags_LA*Ts;
 
 Ryy_LA = R_LA(:,2);
-Ruu_LA = R_LA(:,3);
-Ryu_LA = R_LA(:,4);
+Ruu_LA = R_LA(_,3);
+Ryu_LA = R_LA(4,:);
 
 Ryy_LA_n = Ryy_LA/max(abs(Ryy_LA));
 Ruu_LA_n = Ruu_LA/max(abs(Ruu_LA));
@@ -205,12 +205,12 @@ y_LC_id = detrend(y_LC,0);
 
 %% Correlaciones normalizadas
 
-lags_LC = R_LC(:,1);
+lags_LC = R_LC(1,:);
 tau_LC = lags_LC*Ts;
 
-Ryy_LC = R_LC(:,2);
-Ruu_LC = R_LC(:,3);
-Ryu_LC = R_LC(:,4);
+Ryy_LC = R_LC(2,:);
+Ruu_LC = R_LC(3,:);
+Ryu_LC = R_LC(4,:);
 
 Ryy_LC_n = Ryy_LC/max(abs(Ryy_LC));
 Ruu_LC_n = Ruu_LC/max(abs(Ruu_LC));

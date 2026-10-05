@@ -21,18 +21,18 @@ sys_c = ss(A,B,C,D);
 sys_or_d = c2d(sys_c,Ts,'zoh');
 k = 2; %ganancia del controlador
 controlador = tf(k); %Obs: con el controlador creo que terminé identificando la respuesta al impulso del sistema realimentado.
-%sistema r --> y
-sys_ry_c = feedback(controlador * sys_c, 1);
-sys_ry = c2d(sys_ry_c,Ts,'zoh');
+%sistema u --> y
+sys_ry = feedback(controlador * sys_c, 1);
+sys_uy = c2d(sys_ry,Ts,'zoh');
 
-%sistema r --> u
+%sistema u --> r
 sys_ru_c = feedback(controlador, sys_c);
 sys_ru = c2d(sys_ru_c, Ts, 'ZOH');
 
 % Simular
-y = lsim(sys_ry,r,t);
+y = lsim(sys_d,r,t);
 
-u = lsim(sys_ru, r, t);
+u = lsim(sys
 % Graficar
 figure;
 subplot(3,1,1)
@@ -44,6 +44,8 @@ subplot(3,1,2)
 plot(t,y)
 xlabel('Tiempo [s]')
 ylabel('y')
+
+u = r - k*y;
 
 subplot(3, 1, 3);
 plot(t, u);
@@ -69,7 +71,7 @@ xlim([0, 7]);
 ylabel('y')
 
 lags = 9999; %lags a considerar
-[h_cor, R, ~] = cra([dtrend(y, 0), dtrend(u, 0)], lags, 1000, 0);
+[h_cor, R, ~] = cra([y, u], lags, 20, 0);
 % R --> Matriz con autocovarianzas y covarianzas cruzadas
 % R(1, :) --> indices de lag || R(2, :) --> R_yy || R(3, :) --> R_uu || R(4, :) -->
 % R_yu ||

@@ -137,7 +137,7 @@ cra(R);
 %% Identificación no paramétrica en frecuencia
 
 %ETFE: cociente de DFT´s
-z = iddata(y,u,1);
+z = iddata(y,u,Ts);
 H_etfe = etfe(z);
 
 % Welch. Cociente de PSD´s
