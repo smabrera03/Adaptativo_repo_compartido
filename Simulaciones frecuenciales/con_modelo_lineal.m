@@ -69,9 +69,9 @@ xlim([0, 7]);
 ylabel('y')
 
 lags = 9999; %lags a considerar
-[h_cor, R, ~] = cra([dtrend(y, 0), dtrend(u, 0)], lags, 1000, 0);
+[h_cor, R, ~] = cra([dtrend(y, 0), dtrend(u, 0)], lags, 0, 0);
 % R --> Matriz con autocovarianzas y covarianzas cruzadas
-% R(1, :) --> indices de lag || R(2, :) --> R_yy || R(3, :) --> R_uu || R(4, :) -->
+% R(:, 1) --> indices de lag || R(:, 2) --> R_yy || R(:, 3) --> R_uu || R(:, 4) -->
 % R_yu ||
 
 % Comparación con la respuesta al impulso del modelo
