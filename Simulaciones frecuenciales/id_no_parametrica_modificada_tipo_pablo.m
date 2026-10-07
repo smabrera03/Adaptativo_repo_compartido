@@ -1,5 +1,4 @@
 clear; clc; close all;
-clear; clc; close all;
 
 % IDENTIFICACION NO PARAMETRICA
 % Planta con integrador + polo: a partir de mi código y el de pablo
@@ -48,23 +47,23 @@ R_LA = covf([y_LA_id u_LA_id],m_lags+1);
 % Estimación de la respuesta al impulso
 h_LA = R_LA(2,:)'/R_LA(4,1);
 
-%% CORRELACION -> RESPUESTA EN FRECUENCIA
+%% CORRELACION -> RESPUESTA EN FRECUENCIA - LAZO ABIERTO
 
 Nfft = 2048;
 
-H_cor_fft = fft(h_LA,Nfft);
+Hcor_LA_fft = fft(h_LA,Nfft);
 
 Npos = floor(Nfft/2)+1;
-H_cor_fft = H_cor_fft(1:Npos);
+Hcor_LA_fft = Hcor_LA_fft(1:Npos);
 
 Omega = (0:Npos-1)'*2*pi/Nfft;
 w_cor = Omega/Ts;
 
 % Quitamos continua
-H_cor_fft = H_cor_fft(2:end);
+Hcor_LA_fft = Hcor_LA_fft(2:end);
 w_cor = w_cor(2:end);
 
-H_cor = frd(H_cor_fft,w_cor);
+Hcor_LA = frd(Hcor_LA_fft,w_cor);
 
 %% ETFE
 datos_LA = iddata(y_LA_id,u_LA_id,Ts);
@@ -95,21 +94,18 @@ Hwelch_LA = frd(Hwelch_LA_val,w_welch_LA);
 w_coh = 2*pi*f_coh;
 
 %% LAZO CERRADO
+T_ry = feedback(kp*sys_or_d,1);   % r -> y
+T_ru = feedback(kp,sys_or_d);     % r -> u
 
-T_ry = feedback(kp*sys_or_d,1);
-
-% Transferencia referencia -> acción de control
-T_ru = feedback(kp,sys_or_d);
-
-r = amplitud*sign(randn(n,1));
+r = u;
 
 y_LC = lsim(T_ry,r,t);
 u_LC = lsim(T_ru,r,t);
 
-% Verificación
+% Comprobación de u = Kp(r-y)
 u_check = kp*(r-y_LC);
 
-fprintf('Error máximo: %.3e\n', max(abs(u_LC-u_check)));
+fprintf('Error maximo en u = Kp(r-y): %.3e\n',max(abs(u_LC-u_check)));
 
 %% SIMULACION EN LAZO CERRADO
 % Utilizamos la misma realización aleatoria, pero ahora como referencia.
@@ -161,12 +157,16 @@ title('Salida')
 u_LC_id = detrend(u_LC,0);
 y_LC_id = detrend(y_LC,0);
 
-%% CORRELACION
+%% CORRELACION - LAZO CERRADO
+% Método tipo Pablo para estimar la respuesta al impulso
 
-[h_LC,R_LC,~] = cra([y_LC_id,u_LC_id],m_lags,20,0);
+Rcov_LC = covf([y_LC_id u_LC_id],m_lags+1);
+h_LC = Rcov_LC(2,:)'/Rcov_LC(4,1);
+
+% CRA solamente para visualizar Ryy, Ruu y Ryu
+[~,R_LC,~] = cra([y_LC_id,u_LC_id],m_lags,20,0);
 
 %% Correlaciones normalizadas
-
 lags_LC = R_LC(:,1);
 tau_LC = lags_LC*Ts;
 
