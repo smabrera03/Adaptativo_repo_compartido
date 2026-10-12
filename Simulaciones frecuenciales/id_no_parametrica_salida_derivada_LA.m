@@ -431,6 +431,7 @@ hold on
 semilogx(wplot,unwrap(angle(ETFE_LA_w))*180/pi)
 semilogx(wplot,unwrap(angle(Welch_LA_w))*180/pi)
 semilogx(wplot,unwrap(angle(Cor_LA_w))*180/pi)
+ylim([-400, 0]);
 
 grid on
 xlabel('Frecuencia [rad/s]')
