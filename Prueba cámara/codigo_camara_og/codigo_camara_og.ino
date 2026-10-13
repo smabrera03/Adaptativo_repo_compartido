@@ -17,14 +17,14 @@ const int IMAGE_HEIGHT = 600;
 
 int roiWidth = 800;
 //int roiHeight = 64;
-int roiHeight = 128;
+int roiHeight = 200;
 // Vamos a detectar una BIC azul
 const uint32_t Nmin = 100;
 const uint32_t Nmax = 1000;
 const float circularityMax = 1.5;
-const uint8_t rMin = 26;
-const uint8_t gMin = 28;
-const uint8_t bMax = 10;
+const uint8_t rMin = 10;
+const uint8_t gMin = 5;
+const uint8_t bMax = 3;
 
 uint16_t *rgb565 = nullptr;
 

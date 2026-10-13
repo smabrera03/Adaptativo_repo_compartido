@@ -1,0 +1,24 @@
+PROBLEMA:
+
+Muchas veces las lecturas son inválidas o la circularidad es incorrecta (debería ser 1, ya que es la proporción entre las varianzas, pero en general es mayor)
+Esto se debe a la iluminación. Dependiendo de dónde venga la luz se pueden proyectar sombras sobre la bolita, por lo que el objeto captado por la cámara no siempre parece circular. Además, la medición depende de qué color sea la luz y qué intensidad tenga: si ilumino con luz fría fuerte, obtengo, por ejemplo:
+
+b:3	r:30	g:28
+
+Si ilumino con luz tenue tengo:
+
+b:0	r:23	g:14
+
+En base a esto, propongo el siguiente umbral:
+
+const uint8_t R_MIN = 10;
+const uint8_t G_MIN = 5;
+const uint8_t B_MAX = 3;
+
+Con esto pude acercar un poco más la circularidad a 1. Ahora está en el orden de 2 ~ 8. Sigue siendo alto, es decir, la cámara no ve un objeto completamente circular. Entonces ¿qué representa el valor de x que obtengo?
+
+Que C no sea cercano a 1 también puede deberse a que la mitad de la pelota cae fuera de la imagen, por ejemplo. Para evitar esto se puede aumentar la ROI, pero eso aumenta el tiempo de procesamiento, baja los fps a casi 4 frames/s. Para evitar esto configuré la ROI en una zona de 800 píxeles de ancho por 200 de alto.
+
+A tener en cuenta para analizar: revisar la posición en y devuelta por el código. Debe ser cercana a 100, que es la mitad de la ROI. 
+
+Otro problemón: Qué pasa con las mediciones inválidas? ¿Dónde queda la bola? ¿En el mismo punto que estaba antes?

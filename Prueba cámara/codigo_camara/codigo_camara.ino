@@ -11,8 +11,8 @@
 #define AP_SSID "ESP32CAM_CARRITO"
 #define AP_PASS "12345678"
 
-#define IMAGE_WIDTH  320
-#define IMAGE_HEIGHT 240
+#define IMAGE_WIDTH  800
+#define IMAGE_HEIGHT 200
 
 #define LED_PIN 4
 
@@ -48,9 +48,9 @@ WebServer server(80);
 
 // Valores iniciales: se ajustaran con imagenes reales.
 
-const uint8_t R_MIN = 26;
-const uint8_t G_MIN = 28;
-const uint8_t B_MAX = 1;
+const uint8_t R_MIN = 10;
+const uint8_t G_MIN = 5;
+const uint8_t B_MAX = 3;
 
 const uint32_t N_MIN = 20;
 const uint32_t N_MAX = 15000;
