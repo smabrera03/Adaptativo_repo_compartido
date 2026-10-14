@@ -59,10 +59,17 @@ G_iv4_LA = iv4(z_id_LA,orden_LA);
 disp('Modelo IV4 - LA (u -> velocidad):');
 present(G_iv4_LA);
 
-figure('Name','LA - Parametrico vs espectral');
-bode(G_v_d,G_spa_LA,G_iv4_LA);
-legend('Teorica','SPA','IV4','Location','best'); grid on;
-title('LA: comparacion frecuencial');
+%% COMPARACION PARAMETRICA Y NO PARAMETRICA - LA
+
+figure('Name','LA - Parametrico vs no parametrico');
+
+bode(G_v_d, G_spa_LA, G_etfe_LA, G_iv4_LA);
+grid on;
+
+legend('Modelo teorico', 'SPA', 'ETFE', 'IV4', ...
+       'Location', 'best');
+
+title('Lazo abierto: comparacion frecuencial');
 
 figure('Name','LA - Validacion');
 compare(z_val_LA,G_iv4_LA,G_v_d);
