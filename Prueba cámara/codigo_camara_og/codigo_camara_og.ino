@@ -16,15 +16,14 @@ const int IMAGE_WIDTH = 800;
 const int IMAGE_HEIGHT = 600;
 
 int roiWidth = 800;
-//int roiHeight = 64;
-int roiHeight = 200;
+int roiHeight = 300;
 // Vamos a detectar una BIC azul
 const uint32_t Nmin = 100;
-const uint32_t Nmax = 1000;
-const float circularityMax = 1.5;
-const uint8_t rMin = 10;
-const uint8_t gMin = 5;
-const uint8_t bMax = 3;
+const uint32_t Nmax = 12000;
+const float circularityMax = 10;
+const uint8_t rMin = 19;
+const uint8_t gMin = 10;
+const uint8_t bMax = 5;
 
 uint16_t *rgb565 = nullptr;
 
@@ -206,7 +205,8 @@ void startHTTP() {
 
   Serial.println("HTTP iniciado");
   Serial.print("http://");
-  Serial.print(WiFi.localIP());
+  //Serial.print(WiFi.localIP());
+  Serial.print("192.168.4.1");
   Serial.println("/capture");
 }
 
@@ -693,7 +693,7 @@ BallDetection detectBallRGB565(
     result.circularity = 9999.0f;
 
   result.valid =
-    N >= nmin && N <= nmax;  // && result.circularity <= circularityMax;
+    (N >= nmin && N <= nmax) && (result.circularity <= circularityMax);
 
   return result;
 }
@@ -893,13 +893,14 @@ void loop() {
       circularityMax);
 
     Serial.printf(
-      "x:%.1f\ty:%.1f\tN:%lu\tsigma:%.2f\tC:%.2f\tfps:%.1f\n",
+      "x:%.1f\ty:%.1f\tN:%lu\tsigma:%.2f\tC:%.2f\tfps:%.1f\tvalid:%d\n",
       ball.x,
       ball.y,
       ball.pixels,
       ball.sigma,
       ball.circularity,
-      fps);
+      fps,
+      ball.valid);
   }
 
   uint32_t now = millis();

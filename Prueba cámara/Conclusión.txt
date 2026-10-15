@@ -1,0 +1,6 @@
+La cámara no vale la pena porque:
+
+1) No es tan fácil definir los umbrales, ya que cambian fuertemente con la luz
+2) No es fácil mantener la cámara a una posición y orientación fijas respecto de la barra. 
+3) Con el movimiento de la barra la pelota se sale de la roi. 
+4) Hay muchas mediciones que terminan siendo inválidas. No es exactamente ruido, pero tampoco es utilizable la medición de la cámara. 
