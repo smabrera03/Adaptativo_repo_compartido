@@ -502,3 +502,23 @@ semilogx(wplot,unwrap(angle(Welch_T_w))*180/pi)
 grid on
 xlabel('Frecuencia [rad/s]')
 ylabel('Fase [grados]')
+
+%% PSD de la señal de excitación - Lazo abierto
+
+% Estimación de la densidad espectral de potencia
+% mediante el método de Welch
+[PSD_u, f] = pwelch(u_LA, [], [], [], fs);
+
+% Convertir frecuencia de Hz a rad/s
+w = 2*pi*f;
+
+figure('Name','PSD de la entrada aleatoria - LA');
+
+plot(w, 10*log10(PSD_u), 'LineWidth', 1.5);
+grid on;
+
+xlabel('Frecuencia [rad/s]');
+ylabel('PSD [dB/Hz]');
+title('Densidad espectral de potencia de la entrada - LA');
+
+xlim([0 100]);
