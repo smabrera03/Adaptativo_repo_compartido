@@ -82,6 +82,9 @@ legend('IV4','Teorica','Location','best');
 figure('Name','LA - Residuos');
 resid(z_val_LA,G_iv4_LA);
 
+%Duda: ¿Por que la correlación cruzada en este gráfico no cae a cero? ¿El
+%modelo no es lo suficientemente complejo?
+
 %% 7) LC: controlador proporcional y simulacion consistente en discreto
 Kp = 2;
 T_ry_d = feedback(Kp*G_d,1);  % referencia -> posicion
@@ -122,8 +125,10 @@ pzmap(G_iv4_LC,T_ry_d); grid on;
 legend('IV4','T teorica','Location','best');
 
 figure('Name','LC - Residuos');
-resid(z_val_LC,G_iv4_LC);
+OPT = residOptions('MaxLag', 100);
+resid(z_val_LC,G_iv4_LC, OPT);
 
+%Los residuos dan mal, hay correlación entre entrada y salida
 %% 9) Comparacion opcional: planta u -> y en LC
 % Esta estimacion directa puede sesgarse con ruido bajo realimentacion.
 % En simulacion sin ruido se incluye solo como exploracion.
