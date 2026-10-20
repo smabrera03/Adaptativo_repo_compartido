@@ -24,10 +24,6 @@ q0 = 33.1549;
 q1 = 9.736;
 k  = 11.4345;
 
-% Relación estática servo-barra
-a0 = deg2rad(-3.9);
-a1 = 0.34;
-
 % Muestreo
 fs = 50;          % [Hz]
 Ts = 1/fs;        % [s]
