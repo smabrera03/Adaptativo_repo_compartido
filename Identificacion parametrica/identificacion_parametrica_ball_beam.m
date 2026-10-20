@@ -27,7 +27,7 @@ r = amp*sign(randn(N,1));
 u_LA = r;
 
 %% 3) LA: posicion, derivada numerica y transferencia exacta equivalente
-x_LA = lsim(G_d,u_LA,t);
+x_LA = lsim(G_d,u_LA,t); %SUMAR RUIDO
 % Diferencia hacia atras: v[k]=(x[k]-x[k-1])/Ts, k=2,...,N.
 v_LA = diff(x_LA)/Ts;
 u_LA_v = u_LA(2:end);
@@ -43,7 +43,7 @@ z_id_LA = iddata(v_LA(1:Nid_LA),u_LA_v(1:Nid_LA),Ts);
 z_val_LA = iddata(v_LA(Nid_LA+1:end),u_LA_v(Nid_LA+1:end),Ts);
 
 %% 5) Identificacion no parametrica para referencia
-G_spa_LA = spa(z_id_LA);
+G_spa_LA = spa(z_id_LA); %revisar
 G_etfe_LA = etfe(z_id_LA);
 
 figure('Name','LA - Identificacion espectral');
@@ -54,7 +54,7 @@ grid on; title('Lazo abierto: u -> velocidad estimada');
 %% 6) Modelo parametrico LA: tercer orden (integrador eliminado)
 % iv4 usa [na nb nk] para el modelo de polinomios tipo ARX.
 % El orden 3 es una hipotesis inicial que se valida con los datos.
-orden_LA = [3 3 1];
+orden_LA = [3 3 1]; %Probar un modelo ARMAX. Probar un polinomio C para disminuir la correlación
 G_iv4_LA = iv4(z_id_LA,orden_LA);
 disp('Modelo IV4 - LA (u -> velocidad):');
 present(G_iv4_LA);
