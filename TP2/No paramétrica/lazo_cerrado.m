@@ -13,11 +13,11 @@ a0 = deg2rad(-3.9);   % Offset servo-barra [rad]
 a1 = 0.34;            % Pendiente servo-barra
 
 
-fs = 5;              % Frecuencia de muestreo [Hz]
+fs = 50;              % Frecuencia de muestreo [Hz]
 Ts = 1/fs;            % Periodo de muestreo [s]
 
 
-N = 5000; %Largo de la muestra a utilizar
+N = 10000; %Largo de la muestra a utilizar
 
 t = (0:N-1)'*Ts; %Vector de tiempos
 
@@ -61,205 +61,163 @@ y = y0 + e;
 y = y - mean(y);
 
 %Recuperamos u
-u = kp * (r - y);
+u = kp * (r - y0);
+
+%% GRAFICOS
+figure('Position', [150, -100, 800, 600]);
+
+subplot(3, 1, 1);
+plot(t_sol, r);
+
+ylim([-1.1*amplitud, 1.1*amplitud]);
+ylabel('r [m]');
+xlabel('Tiempo [s]');
+xlim([0, 20]);
+grid on;
+title('Referencia');
+
+subplot(3, 1, 2);
+plot(t_sol, u);
+
+ylabel('u [rad]');
+xlabel('Tiempo[s]');
+xlim([0, 20]);
+grid on;
+title('Acción de control');
+
+subplot(3, 1, 3);
+plot(t_sol, y);
+
+ylabel('y [m]');
+xlabel('Tiempo [s]');
+xlim([0, 20]);
+grid on;
+title('Posición');
+
+fig1 = gcf;
+exportgraphics(fig1, 'NP graficos/LC/r_u_y.pdf', 'ContentType', 'image', 'Resolution', 300);
 
 %% FFT DE LA CORRELACIÓN
+
+
+[h_verdadera_T, t_imp] = impulse(T);
+plot(t_imp, h_verdadera_T, 'LineWidth', 2); hold on;
 
 lags = 2000;
 R = covf([y, r], lags + 1);
 h_cor_T = R(2,:)'/R(4,1);
-plot(t(1:lags+1), h_cor_T/Ts, 'r--'); hold on;
-impulse(T);
+
+plot(t(1:lags+1), h_cor_T/Ts, 'r--', 'LineWidth', 1);
+grid();
+xlim([0, 6]);
+xlabel('Tiempo [s]');
+ylabel('h(t) [m]');
 legend('Estimada', 'Verdadera');
 
-T_fft = fft(h_cor_T);
+fig2 = gcf;
+exportgraphics(fig2, 'NP graficos/LC/respuesta al impulso.pdf', 'ContentType', 'image', 'Resolution', 300);
 
-% Vector de frecuencias [Hz]
-N_fft = length(T_fft);
-f = (0:N_fft-1)' * fs/N_fft;
+N_fft = 2048;
+T_fft = fft(h_cor_T, N_fft);
+
+% Vector de frecuencias [rad/s]
+w = (0:N_fft-1)' * fs * 2 * pi /N_fft;
 
 % Nos quedamos con las frecuencias positivas hasta Nyquist
-idx = 1:floor(N_fft/2)+1;
-f = f(idx);
+idx = 1:floor(N_fft/2)+1; %el primer componente es 1, así que incluye la continua
+w = w(idx);
 T_fft = T_fft(idx);
 
 %% ETFE
 data = iddata(y, r, Ts);
-T_etfe = etfe(data);
-w = 2*pi*f;                  % [rad/s]
-T_etfe_bode = squeeze(freqresp(T_etfe, w));
+T_etfe = etfe(data, [], N_fft/2 + 1);
+
+w_etfe = T_etfe.Frequency;
+
+[T_etfe_bode, ~] = freqresp(T_etfe, w_etfe);
+T_etfe_bode = squeeze(T_etfe_bode);
 
 %% WELCH
 
-Pyr = cpsd(y, r);
-Prr = pwelch(r);
+ventana = hamming(256);
+noverlap = 64;
+%NOTA: Welch divide la señal el segmentos, calcula la PSD de cada uno y
+%promedia. Cuanto más cortos son los segmentos, más segmentos hay, más
+%cosas se promedian y más menos varianza tiene el resultado.
+
+[Pyr, f_welch] = cpsd(y, r, ventana, noverlap, N_fft, fs);
+w_welch = 2 * pi * f_welch;
+
+[Prr, ~] = pwelch(r, ventana, noverlap, f_welch, fs);
 T_welch = Pyr./Prr;
-w_welch = (0: length(T_welch) - 1)' * pi/length(T_welch);
+
+
 T_welch = frd(T_welch, w_welch);
 T_welch_bode = squeeze(T_welch.ResponseData);
-f_welch = w_welch / (2 * pi);
 %% CÓMPUTO DEL BODE TEÓRICO
 T_teorica = squeeze(freqresp(T,w));
 
 %% COMPARACIÓN EN BODES
+W_MIN = w(2);
+W_MAX = 30;
 figure;
 
 subplot(2,1,1);
-semilogx(f, 20*log10(abs(T_fft)), 'r-', 'LineWidth', 2); hold on;
-semilogx(f, 20*log10(abs(T_etfe_bode)), 'k', 'LineWidth', 2); hold on;
-semilogx(f, 20*log10(abs(T_teorica)), 'b', 'LineWidth', 2); hold on;
-xlim([f(2), f(end)]);
+semilogx(w, 20*log10(abs(T_fft)), 'r-', 'LineWidth', 1.5); hold on;
+semilogx(w_etfe, 20*log10(abs(T_etfe_bode)), 'k', 'LineWidth', 1.5); hold on;
+semilogx(w_welch, 20*log10(abs(T_welch_bode)), 'm', 'LineWidth', 1.5); hold on;
+semilogx(w, 20*log10(abs(T_teorica)), 'b--', 'LineWidth', 2);
+xlim([W_MIN, W_MAX]);
 grid on;
 ylabel('Magnitud [dB]');
-legend('FFT h\_cor', 'ETFE', 'Verdadero', 'Location', 'SouthWest');
-title('Bode de T estimada por correlación');
+legend('FFT h\_cor', 'ETFE', 'Welch', 'Verdadero', 'Location', 'SouthWest');
+title('Bode de T comparación');
 
 subplot(2,1,2);
-semilogx(f, rad2deg(unwrap(angle(T_fft))), 'r-', 'LineWidth', 2); hold on;
-semilogx(f, rad2deg(unwrap(angle(T_etfe_bode))), 'k', 'LineWidth', 2); hold on;
-semilogx(f, rad2deg(unwrap(angle(T_teorica))), 'b', 'LineWidth', 2);
-xlim([f(2), f(end)]);
+semilogx(w, rad2deg(unwrap(angle(T_fft))), 'r-', 'LineWidth', 1.5); hold on;
+semilogx(w_etfe, rad2deg(unwrap(angle(T_etfe_bode))), 'k', 'LineWidth', 1.5); hold on;
+semilogx(w_welch, rad2deg(unwrap(angle(T_welch_bode))), 'm' , 'LineWidth', 1.5); hold on;
+semilogx(w, rad2deg(unwrap(angle(T_teorica))), 'b--', 'LineWidth', 1.5);
+xlim([W_MIN, W_MAX]);
 ylim([-400, 40]);
 grid on;
-xlabel('Frecuencia [Hz]');
+xlabel('\omega [rad/s]');
 ylabel('Fase [°]');
-%%
-figure;
-bode(T_welch, T_etfe, T)
-legend('Welch', 'ETFE', 'Verdadero', 'Location', 'SouthWest');
-%EL DE WELCH DA RARO
+
+fig3 = gcf;
+exportgraphics(fig3, 'NP graficos/LC/T_comparacion rta en frec.pdf', 'ContentType', 'image', 'Resolution', 300);
+
 %% PERO YO QUERÍA G, NO T
 
 G_fft = T_fft./(kp * (1 - T_fft));
 G_etfe_bode = T_etfe_bode./(kp * (1 - T_etfe_bode));
+G_welch_bode = T_welch_bode./(kp * (1 - T_welch_bode));
 G_teorica = squeeze(freqresp(G,w));
 
 %% COMPARACIÓN EN BODES
 figure;
 
 subplot(2,1,1);
-semilogx(f, 20*log10(abs(G_fft)), 'r-', 'LineWidth', 2); hold on;
-semilogx(f, 20*log10(abs(G_etfe_bode)), 'k', 'LineWidth', 2); hold on;
-semilogx(f, 20*log10(abs(G_teorica)), 'b', 'LineWidth', 2); hold on;
-xlim([f(2), f(end)]);
+semilogx(w, 20*log10(abs(G_fft)), 'r-', 'LineWidth', 1.5); hold on;
+semilogx(w_etfe, 20*log10(abs(G_etfe_bode)), 'k', 'LineWidth', 1.5); hold on;
+semilogx(w_welch, 20 * log(abs(G_welch_bode)), 'm', 'LineWidth', 1.5);
+semilogx(w, 20*log10(abs(G_teorica)), 'b--', 'LineWidth', 1.5);
+xlim([W_MIN, W_MAX]);
 grid on;
 ylabel('Magnitud [dB]');
-legend('FFT h\_cor', 'ETFE', 'Verdadero', 'Location', 'SouthWest');
-title('Bode de T estimada por correlación');
+legend('FFT h\_cor', 'ETFE', 'Welch', 'Verdadero', 'Location', 'SouthWest');
+title('Bode de G comparación');
 
 subplot(2,1,2);
-semilogx(f, rad2deg(unwrap(angle(G_fft))), 'r-', 'LineWidth', 2); hold on;
-semilogx(f, rad2deg(unwrap(angle(G_etfe_bode))), 'k', 'LineWidth', 2); hold on;
-semilogx(f, rad2deg(unwrap(angle(G_teorica))), 'b', 'LineWidth', 2);
-xlim([f(2), f(end)]);
+semilogx(w, rad2deg(unwrap(angle(G_fft))), 'r-', 'LineWidth', 1.5); hold on;
+semilogx(w_etfe, rad2deg(unwrap(angle(G_etfe_bode))), 'k', 'LineWidth', 1.5); hold on;
+semilogx(w_welch, rad2deg(unwrap(angle(G_welch_bode))), 'm', 'LineWidth', 1.5); hold on;
+semilogx(w, rad2deg(unwrap(angle(G_teorica))), 'b--', 'LineWidth', 1.5);
+xlim([W_MIN, W_MAX]);
 ylim([-400, 0]);
 grid on;
-xlabel('Frecuencia [Hz]');
+xlabel('\omega [rad/s]');
 ylabel('Fase [°]');
 
-%% DERIVANDO
-% Simular el sistema a lazo abierto, derivar la salida, identificar:
-G_der = g * k * 1/(s + b/m) * 1/(s^2 + q1 * s + q0); % <-- TRANSFERENCIA A IDENTIFICAR
-
-amplitud = 0.5; %Amplitud del ruido
-u_der = amplitud*sign(randn(N,1)); %Señal de referencia
-u_der = u_der - mean(u_der);
-
-u_der_cont = @(tt) interp1(t,u_der,tt,'linear','extrap');
-%% DEFINICIÓN DEL MODELO Y GENERACIÓN DE LAS SEÑALES
-
-modelo_der = @(tt,x) [
-    x(2);
-    g*sin(x(3)) - (b/m)*x(2);
-    x(4);
-    -q0*x(3) - q1*x(4) + k* u_der_cont(tt)
-];
-
-[t_sol,x_sol] = ode45(modelo_der,t,x0,opts);
-
-y0 = x_sol(:,2); %--> ACÁ TOMO LA DERIVADA
-e = amplitud/10 * randn(N, 1);
-y = y0 + e;
-y = y - mean(y);
-
-%% GRÁFICOS
-
-figure;
-subplot(2, 1, 1);
-plot(t, u_der, 'LineWidth', 2);
-grid on;
-ylabel('Entrada');
-xlabel('Tiempo [s]');
-
-subplot(2, 1, 2);
-plot(t, y, 'LineWidth', 2),
-grid on;
-ylabel('Salida (velocidad)');
-xlabel('Tiempo [s]');
-
-%% FFT DE LA CORRALACIÓN
-lags = 2000;
-R = covf([y, u_der], lags + 1);
-h_cor_der = R(2,:)'/R(4,1);
-plot(t(1:lags+1), h_cor_der/Ts, 'r--'); hold on;
-impulse(G_der);
-legend('Estimada', 'Verdadera');
-
-G_fft = fft(h_cor_der);
-
-% Vector de frecuencias [Hz]
-N_fft = length(G_fft);
-f = (0:N_fft-1)' * fs/N_fft;
-
-% Nos quedamos con las frecuencias positivas hasta Nyquist
-idx = 1:floor(N_fft/2)+1;
-f = f(idx);
-G_fft = G_fft(idx);
-
-
-%% ETFE
-data = iddata(y, u_der, Ts);
-G_etfe = etfe(data);
-w = 2*pi*f;                  % [rad/s]
-G_etfe_bode = squeeze(freqresp(G_etfe, w));
-
-%% WELCH
-
-Pyu = cpsd(y, u_der);
-Puu = pwelch(u_der);
-G_welch = Pyu./Puu;
-w_welch = (0: length(G_welch) - 1)' * pi/length(G_welch);
-G_welch = frd(G_welch, w_welch);
-G_welch_bode = squeeze(G_welch.ResponseData);
-f_welch = w_welch / (2 * pi);
-
-%% CÓMPUTO DEL BODE TEÓRICO
-G_teorica = squeeze(freqresp(G_der,w));
-
-%% COMPARACIÓN EN BODES
-figure;
-
-subplot(2,1,1);
-semilogx(f, 20*log10(abs(G_fft)), 'r-', 'LineWidth', 2); hold on;
-semilogx(f, 20*log10(abs(G_etfe_bode)), 'k', 'LineWidth', 2); hold on;
-semilogx(f, 20*log10(abs(G_teorica)), 'b', 'LineWidth', 2); hold on;
-xlim([f(2), f(end)]);
-grid on;
-ylabel('Magnitud [dB]');
-legend('FFT h\_cor', 'ETFE', 'Verdadero', 'Location', 'SouthWest');
-title('Bode de T estimada por correlación');
-
-subplot(2,1,2);
-semilogx(f, rad2deg(unwrap(angle(G_fft))), 'r-', 'LineWidth', 2); hold on;
-semilogx(f, rad2deg(unwrap(angle(G_etfe_bode))), 'k', 'LineWidth', 2); hold on;
-semilogx(f, rad2deg(unwrap(angle(G_teorica))), 'b', 'LineWidth', 2);
-xlim([f(2), f(end)]);
-ylim([-400, 40]);
-grid on;
-xlabel('Frecuencia [Hz]');
-ylabel('Fase [°]');
-%%
-figure;
-bode(T_welch, T_etfe, T)
-legend('Welch', 'ETFE', 'Verdadero', 'Location', 'SouthWest');
-% EL DE WELCH SIGUE DANDO RARO.
+fig4 = gcf;
+exportgraphics(fig4, 'NP graficos/LC/G_comparacion rta en frec.pdf', 'ContentType', 'image', 'Resolution', 300); 

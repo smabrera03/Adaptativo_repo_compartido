@@ -73,8 +73,9 @@ opts = odeset('MaxStep',Ts/5);
 [t_sol,x_sol] = ode45(modelo,t,x0,opts);
 
 % Salida: posición
-y = x_sol(:,1);
-
+y0 = x_sol(:,1);
+e = amplitud/10 * randn(N, 1);
+y = y0 + e;
 
 %% SEÑALES TEMPORALES
 figure;
@@ -394,7 +395,7 @@ ylim([0 1]);
 
 fig4 = gcf;
 
-exportgraphics(fig4, 'NP grafiocs/LA/coherencia.pdf', 'ContentType', 'image', 'Resolution', 300);
+exportgraphics(fig4, 'NP graficos/LA/coherencia.pdf', 'ContentType', 'image', 'Resolution', 300);
 %% PSD DE ENTRADA Y SALIDA
 
 [Pyy,f_psd] = pwelch( ...

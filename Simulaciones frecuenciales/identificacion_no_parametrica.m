@@ -163,3 +163,5 @@ legend('ETFE','Welch','Correlograma','Modelo')
 title('Espectros')
 h = findobj(gcf,'type','line');
 set(h,'linewidth',2);
+
+
