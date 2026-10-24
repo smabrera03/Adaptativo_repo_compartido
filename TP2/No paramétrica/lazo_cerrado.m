@@ -99,7 +99,7 @@ exportgraphics(fig1, 'NP graficos/LC/r_u_y.pdf', 'ContentType', 'image', 'Resolu
 
 %% FFT DE LA CORRELACIÓN
 
-
+figure;
 [h_verdadera_T, t_imp] = impulse(T);
 plot(t_imp, h_verdadera_T, 'LineWidth', 2); hold on;
 
@@ -112,7 +112,7 @@ grid();
 xlim([0, 6]);
 xlabel('Tiempo [s]');
 ylabel('h(t) [m]');
-legend('Estimada', 'Verdadera');
+legend('Verdadera', 'Estimada');
 
 fig2 = gcf;
 exportgraphics(fig2, 'NP graficos/LC/respuesta al impulso.pdf', 'ContentType', 'image', 'Resolution', 300);
@@ -145,10 +145,10 @@ noverlap = 64;
 %promedia. Cuanto más cortos son los segmentos, más segmentos hay, más
 %cosas se promedian y más menos varianza tiene el resultado.
 
-[Pyr, f_welch] = cpsd(y, r, ventana, noverlap, N_fft, fs);
+[Pyr, f_welch] = cpsd(y, r, ventana, noverlap, N_fft, fs, 'twosided');
 w_welch = 2 * pi * f_welch;
 
-[Prr, ~] = pwelch(r, ventana, noverlap, f_welch, fs);
+[Prr, ~] = pwelch(r, ventana, noverlap, f_welch, fs, 'twosided');
 T_welch = Pyr./Prr;
 
 

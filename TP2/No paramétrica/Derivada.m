@@ -56,7 +56,7 @@ figure;
 subplot(2, 1, 1);
 plot(t, u_der, 'LineWidth', 2);
 grid on;
-ylabel('Entrada [m]');
+ylabel('\Delta u [rad]');
 ylim([-1.1*amplitud, 1.1*amplitud]);
 xlabel('Tiempo [s]');
 
@@ -71,6 +71,7 @@ exportgraphics(fig5, 'NP graficos/Derivada/Entrada y salida.pdf', 'ContentType',
 
 %% FFT DE LA CORRALACIÓN
 
+figure;
 [h_verdadera_G_der, t_imp] = impulse(G_der);
 plot(t_imp, h_verdadera_G_der, 'LineWidth', 2); hold on;
 
@@ -78,9 +79,11 @@ lags = 2000;
 R = covf([y, u_der], lags + 1);
 h_cor_der = R(2,:)'/R(4,1);
 plot(t(1:lags+1), h_cor_der/Ts, 'r--', 'LineWidth', 2);
-legend('Estimada', 'Verdadera');
+legend('Verdadera', 'Estimada');
 grid on;
 xlim([t_imp(1), t_imp(end)]);
+xlabel('Tiempo [s]');
+ylabel('h[k]')
 
 fig6 = gcf;
 
@@ -112,10 +115,10 @@ G_etfe_bode = squeeze(G_etfe_bode);
 ventana = hamming(256);
 noverlap = 64;
 
-[Pyu, f_welch] = cpsd(y, u_der, ventana, noverlap, N_fft, fs);
+[Pyu, f_welch] = cpsd(y, u_der, ventana, noverlap, N_fft, fs, 'twosided');
 w_welch = 2 * pi * f_welch;
 
-[Puu, ~] = pwelch(u_der, ventana, noverlap, f_welch, fs);
+[Puu, ~] = pwelch(u_der, ventana, noverlap, f_welch, fs, 'twosided');
 
 G_welch = Pyu./Puu;
 
