@@ -61,7 +61,7 @@ y = y0 + e;
 y = y - mean(y);
 
 %Recuperamos u
-u = kp * (r - y0);
+u = kp * (r - y);
 
 %% GRAFICOS
 figure('Position', [150, -100, 800, 600]);
@@ -221,3 +221,6 @@ ylabel('Fase [°]');
 
 fig4 = gcf;
 exportgraphics(fig4, 'NP graficos/LC/G_comparacion rta en frec.pdf', 'ContentType', 'image', 'Resolution', 300); 
+
+
+
