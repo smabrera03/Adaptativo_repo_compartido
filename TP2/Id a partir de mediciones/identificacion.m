@@ -13,6 +13,7 @@ grid on;
 xlabel('Tiempo [s]');
 ylabel('u [rad]');
 title('Entrada');
+xlim([0, max(t)/4]);
 
 subplot(2, 1, 2),
 plot(t, y, 'LineWidth', 2);
@@ -20,6 +21,7 @@ grid on;
 xlabel('Tiempo [s]');
 ylabel('y [rad]');
 title('Salida');
+xlim([0, max(t)/4]);
 
 exportgraphics(gcf, 'graficos id con medicion/entrada y salida.pdf', 'ContentType', 'image', 'Resolution', 300);
 %% IDENTIFICACIÓN PREVIA
@@ -31,6 +33,7 @@ G = k /(s^2 + q1 * s + q0); % --> Transferencia a identificar.
 %NOTA: Tomar esta transferencia como referencia, no como objetivo. 
 %El resultado puede ser distinto a esta, pero no demasiado
 Gd = c2d(G, Ts, 'zoh'); 
+Gd.Variable = 'z^-1';
 present(Gd);
 %% PASO 1: Identificación no paramétrica por Welch
 
