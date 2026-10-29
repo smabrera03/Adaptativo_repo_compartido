@@ -220,3 +220,69 @@ ylabel('Amplitud');
 
 fig5 = gcf;
 exportgraphics(fig5, 'graficos id con medicion/Residuos.pdf', 'ContentType', 'image', 'Resolution', 300);
+
+%% COMPARACIÓN CON NUEVOS DATOS
+
+%Tengo que renombrar las variables porque serían sobreescritas
+u0 = u;
+y0 = y;
+
+%%
+load('datos_val.mat');
+
+y1 = deg2rad(y);
+u1 = deg2rad(u); %Amplitud de entrada: +/-10°
+
+z_val1 = iddata(y1, u1, Ts);
+
+figure('Position',[50 -50 800 600]);
+
+subplot(2, 1, 1);
+compare(z_val1, Gd);
+grid on;
+set(findall(gca,'Type','line'),'LineWidth',2);
+xlabel('Tiempo [s]');
+ylabel('y [rad]');
+title('Salida según identificación original');
+
+subplot(2, 1, 2);
+compare(z_val1, m_arx_red);
+grid on;
+set(findall(gca,'Type','line'),'LineWidth',2);
+xlabel('Tiempo [s]');
+ylabel('y [rad]');
+title('Salida según identificación por ARX + reducción');
+
+
+fig6 = gcf;
+exportgraphics(fig6, 'graficos id con medicion/validacion1.pdf', 'ContentType', 'image', 'Resolution', 300);
+
+%% OTRA ENTRADA: +/-45°
+
+load('datos_val2.mat');
+
+u2 = deg2rad(u);
+y2 = deg2rad(y);
+
+z_val2 = iddata(y2, u2, Ts);
+
+figure('Position',[50 -50 800 600]);
+
+subplot(2, 1, 1);
+compare(z_val2, Gd);
+grid on;
+set(findall(gca,'Type','line'),'LineWidth',2);
+xlabel('Tiempo [s]');
+ylabel('y [rad]');
+title('Salida según identificación original');
+
+subplot(2, 1, 2);
+compare(z_val2, m_arx_red);
+grid on;
+set(findall(gca,'Type','line'),'LineWidth',2);
+xlabel('Tiempo [s]');
+ylabel('y [rad]');
+title('Salida según identificación por ARX + reducción');
+
+fig7 = gcf;
+exportgraphics(fig7, 'graficos id con medicion/validacion2.pdf', 'ContentType', 'image', 'Resolution', 300);
