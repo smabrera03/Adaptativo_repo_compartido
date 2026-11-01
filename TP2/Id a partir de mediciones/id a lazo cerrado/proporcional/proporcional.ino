@@ -69,7 +69,7 @@ void loop() {
   sensors_event_t a, g, t;
   mpu.getEvent(&a, &g, &t);
   
-  theta_x_acc = (180/PI) * atan2(a.acceleration.y, a.acceleration.z) - theta_bias;
+  theta_x_acc = (180.0/PI) * atan2(a.acceleration.y, a.acceleration.z) - theta_bias;
   theta_x_gyro_fc = theta_x_fc + (180/PI) * g.gyro.x * (PERIODO/1000000.0f);
   
   theta_x_fc = alfa * theta_x_acc + (1 - alfa) * theta_x_gyro_fc;
