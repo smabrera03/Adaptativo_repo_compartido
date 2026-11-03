@@ -3,7 +3,7 @@ clear; clc; close all;
 
 %% Configuracion del ensayo
 
-Texp = 60;           % Duracion [s]
+Texp = 3;           % Duracion [s]
 Ts_prbs = 1.5;      % Actualizacion PRBS: 20 Hz
 A = 0.1;            % Amplitud de la entrada [rad]
 
@@ -16,10 +16,11 @@ alpha = 0.7;
 %% Generar PRBS
 % Requiere System Identification Toolbox
 N = ceil(Texp/Ts_prbs) + 1;
-prbs = A * idinput(N, 'prbs', [0 1], [-1 1]);
-prbs = prbs(:);
 
-%prbs = ones(N,1);
+%prbs = A * idinput(N, 'prbs', [0 1], [-1 1]);
+%prbs = prbs(:); %Entrada PRBS
+
+prbs = A*ones(N,1); %Entrada escalon
 
 %% Abrir puerto serie
 s = serial('COM11', ...
@@ -198,7 +199,7 @@ title('Velocidad');
 %writetable(datos, 'datos_pendulo_prbs.csv');
 %save('datos_pendulo_prbs.mat', 'datos', 'prbs', 'Ts_adq', 'Ts_prbs', 'A');
 
-%save('datos_cart_beam.mat', 'datos');
+save('datos_escalon_v2.mat', 'datos');
 
 fprintf('\nMuestras adquiridas: %d\n', height(datos));
 fprintf('Duracion registrada: %.3f s\n', t(end));
