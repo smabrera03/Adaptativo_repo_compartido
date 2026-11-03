@@ -158,3 +158,4 @@ function f=ajuste_sim(datos,modelo)
         f=100*(1-norm(y-yh)/den);
     end
 end
+
