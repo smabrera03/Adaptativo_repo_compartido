@@ -319,12 +319,6 @@ tablaAjustes = table(ordenes(:), ...
 
 disp(tablaAjustes);
 
-figure('Name','IV | Ajuste de seleccion por orden e instrumentos');
-plot(ordenes,fitSel(:,1),'o-',ordenes,fitSel(:,2),'s-','LineWidth',1.5);
-grid on; xlabel('Orden n'); ylabel('Fit seleccion [%]');
-legend('IV: retardos de referencia','IV: modelo auxiliar','Location','best');
-title('Variables instrumentales: seleccion del orden y tipo de instrumento');
-
 figure('Name','IV | Validacion temporal - prueba final');
 compare(zTest,modeloElegido,Gder_d); grid on;
 title(sprintf('%s orden %d: velocidad medida y simulada - prueba', ...
