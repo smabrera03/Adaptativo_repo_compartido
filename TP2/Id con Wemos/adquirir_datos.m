@@ -17,10 +17,10 @@ alpha = 0.7;
 % Requiere System Identification Toolbox
 N = ceil(Texp/Ts_prbs) + 1;
 
-%prbs = A * idinput(N, 'prbs', [0 1], [-1 1]);
-%prbs = prbs(:); %Entrada PRBS
+prbs = A * idinput(N, 'prbs', [0 1], [-1 1]);
+prbs = prbs(:); %Entrada PRBS
 
-prbs = A*ones(N,1); %Entrada escalon
+%prbs = A*ones(N,1); %Entrada escalon
 
 %% Abrir puerto serie
 s = serial('COM11', ...

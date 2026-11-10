@@ -15,6 +15,7 @@ referencia
 %% DATOS Y DEFINICIÓN DE PARÁMETROS
 clear; close all; clc;
 
+carpeta = 'graficos_id_wemos';
 load('datos_cart_beam.mat');
 
 t = datos.t;
@@ -39,6 +40,51 @@ z_int = iddata(y(N_corte+1:end), u(N_corte+1:end), Ts);  %Este conjunto de datos
 s = tf('s');
 integrador = c2d(1/s, Ts, 'zoh');
 
+
+%% IMÁGENES TEMPORALES
+
+lw = 2;  % Grosor de las líneas
+
+figure('Position', [150 -150 1000 1000]);
+
+sgtitle('Señales simuladas');
+
+% Posición y referencia
+subplot(3,1,1);
+plot(t, r, 'LineWidth', lw);
+hold on;
+plot(t, y, 'LineWidth', lw);
+grid on;
+xlim([t(1) t(end)]);
+ylim([1.4*min(y) 1.4*max(y)]);
+
+xlabel('Tiempo [s]');
+ylabel('Posición [m]');
+legend('Referencia r', 'Posición y', 'Location', 'northwest');
+
+
+% Velocidad
+subplot(3,1,2);
+plot(t, y_der, 'LineWidth', lw);
+grid on;
+xlim([t(1) t(end)]);
+
+xlabel('Tiempo [s]');
+ylabel('Velocidad [m/s]');
+
+
+% Acción de control
+subplot(3,1,3);
+plot(t, u, 'LineWidth', lw);
+grid on;
+xlim([t(1) t(end)]);
+
+xlabel('Tiempo [s]');
+ylabel('Acción de control [rad]');
+
+drawnow;
+fig1 = gcf;
+exportgraphics(fig1, fullfile(carpeta, 'senales_simuladas.png'), 'ContentType', 'image', 'Resolution', 300);
 %% ARX
 
 modeloARX = arx(z_id, orden);
@@ -112,12 +158,14 @@ ordenBJ = [2 2 2 3 1];
 
 modeloBJ = bj(z_id, ordenBJ);
 
-figure;
+figure('Position', [150 -150 800 600]);
+
 subplot(2, 1, 1);
 compare(z_val, modeloBJ);
 grid on;
 title('Dinámica de la velocidad');
 ylabel('Velociad [m/s]');
+xlabel('Tiempo [s]');
 
 
 modeloBJ_int = integrador * modeloBJ;
@@ -127,6 +175,14 @@ compare(z_int, modeloBJ_int);
 grid on;
 title('Dinámica de la posición');
 ylabel('Posción [m]');
+xlabel('Tiempo [s]');
+
+lineas = findall(gcf, 'Type', 'line');
+set(lineas, 'LineWidth', lw);
+
+drawnow;
+fig2 = gcf;
+exportgraphics(fig2, fullfile(carpeta, 'validacion_BJ.png'), 'ContentType', 'image', 'Resolution', 300);
 
 %% OE
 
@@ -150,10 +206,24 @@ ylabel('Posción [m]');
 
 %% BODES
 
-bode(modeloARX_int, modeloARXRED_int, modeloIV4_int, modeloBJ_int, modeloOE_int)
+lw = 2;  % Grosor de las líneas
+
+figure('Position', [150 -150 800 600]);
+bode(modeloARX_int, modeloARXRED_int, modeloIV4_int, modeloBJ_int, modeloOE_int);
 grid on;
+
 legend('ARX', 'ARX reducido', 'IV4', 'BJ', 'OE', 'Location', 'best');
 
+% Ajustar grosor de todas las curvas
+lineas = findall(gcf, 'Type', 'line');
+set(lineas, 'LineWidth', lw);
+
+title('Diagramas de Bode de los modelos identificados');
+subtitle('');
+
+drawnow;
+fig3 = gcf;
+exportgraphics(fig3, fullfile(carpeta, 'comparacion_bode.png'), 'ContentType', 'image', 'Resolution', 300);
 %% RESUMEN DE RESULTADOS
 
 % Modelos con integrador
