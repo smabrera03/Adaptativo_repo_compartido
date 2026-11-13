@@ -29,12 +29,12 @@ tantas salidas como parámetros tenga el controlador
 %% DEFINICIÓN DE PARÁMETROS INICIALES
 clc; clear; close all;
 
-kp = 1;
+kp = 1.0;
 ki = 0;
 kd = 0;
 
 gamma = 0.5;
-lambda = 0.1;
+lambda = 2.0;
 iteraciones = 10;
 
 Tfin = 5; %tiempo de finalización
@@ -101,9 +101,10 @@ for k = 1:iteraciones
 
     % --- Filtro 1/R * dR/dtheta, con A(q) común a ki y kd
     a = [1 + ki + kd, -(1 + 2*kd), kd];   % A(q)
-    if any(abs(roots(a)) >= 1)
-        warning('Iter %d: A(q) tiene raíces fuera del círculo unitario. Filtro inestable.', k);
-    end
+    
+    %if any(abs(roots(a)) >= 1)
+     %   warning('Iter %d: A(q) tiene raíces fuera del círculo unitario. Filtro inestable.', k);
+    %end
 
     % Sensibilidades de la salida: filtrar y2
     dy_dkp = y2 / kp;
@@ -140,6 +141,6 @@ fprintf('Parámetros finales: kp = %.4f, ki = %.4f, kd = %.4f\n', kp, ki, kd);
 
 %%
 
-nombre = fullfile('resultados_simulaciones', '----'); % Nombre del archivo donde se guardarán los resultados
+nombre = fullfile('resultados_simulaciones', '---'); % Nombre del archivo donde se guardarán los resultados
 save(nombre);
 
