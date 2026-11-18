@@ -1,12 +1,12 @@
 clear; close all; clc;
 
-load('resultados_simulaciones\Ajuste PID.mat');
+load('resultados_simulaciones\---.mat');
 
 i  = 1:1:iteraciones;     % iteraciones (costo y ensayos)
 i0 = 0:1:iteraciones;     % iteraciones incluyendo el valor inicial (coeficientes)
 lw = 1.5;
 
-%% 1) Evolución del costo
+    %% 1) Evolución del costo
 figure;
 plot(i, Jhist, '-o', 'LineWidth', lw);
 grid on;
@@ -50,11 +50,13 @@ sgtitle('Evolución de los coeficientes del regulador PID');
 %%
 
 figure;
-plot(t, y_final, 'LineWidth', lw); hold on;
-plot(t, ym, 'LineWidth', lw);
+plot(t, ym, 'LineWidth', lw); hold on;
+plot(t, y0, 'LineWidth', lw); hold on;
+plot(t, y_final, 'LineWidth', lw);
 grid on;
 xlabel('Tiempo [s]');
 ylabel('Posición [m]');
+legend('Buscada', 'Original', 'Obtenida');
 title('Comparación de la respuesta buscada y la obtenida');
 
 figure;
@@ -62,7 +64,17 @@ plot(t, rad2deg(u_final), 'LineWidth', lw);
 grid on;
 xlabel('Tiempo [s]');
 ylabel('Acción de control [°]');
-title('Acción de control obtenida');
+title('Acción de control obtenida \lambda = ', lambda);
 
+%{
 
+Notas:
+
+No parece andar muy bien. Luego de las 10 iteraciones sigue habiendo
+bastante diferencia entre las señales, pero el error oscila, como si no
+encontrara el camino de descenso. ¿Me quedé en un mínimo local?
+--> Aumentar gamma
+
+con gamma = 1.5 osciló. El costo sube en lugar de bajar
+%}
 
