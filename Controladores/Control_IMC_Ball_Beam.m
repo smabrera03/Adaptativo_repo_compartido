@@ -102,6 +102,25 @@ figure; plot(t,rad2deg(U),'LineWidth',1.4); grid on; xlabel('Tiempo [s]'); ylabe
 figure; stairs(t,rad2deg(du)); grid on; xlabel('Tiempo [s]'); ylabel('Perturbacion [grados]');
 figure; plot(t,D,'LineWidth',1.4); grid on; xlabel('Tiempo [s]'); ylabel('Desviacion [m]'); legend(etiquetas); title('Respuesta a perturbacion de entrada');
 figure; plot(t,ref,'k--',t,Ytotal,'LineWidth',1.4); grid on; xlabel('Tiempo [s]'); ylabel('Posicion [m]'); legend('Referencia',etiquetas{:}); title('Seguimiento con perturbacion');
+
+zgrid off;
+
+grid on;
+axis equal;
+
+xlabel('Parte real');
+ylabel('Parte imaginaria');
+
+title('Polos y ceros de los modelos de posición');
+
+legend('Identificado BJ LC', ...
+       'Nominal ZOH', ...
+       'Location', 'best');
+
+exportgraphics(gcf, ...
+    'polos_ceros_imc.png', ...
+    'Resolution', 300);
+
 %% Funciones locales
 function [u,v]=ensayo(e,Ts,m,b,g,q0,q1,ks,Kp,LC)
  t=(0:numel(e)-1)'*Ts;
