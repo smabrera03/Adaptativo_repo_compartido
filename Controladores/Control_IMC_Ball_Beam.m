@@ -96,16 +96,59 @@ for j=1:2
  Ytotal(:,j)=Y(:,j)+D(:,j);
  fprintf('RMSE objetivo: %.6g m | max control: %.6g grados | max perturbacion: %.6g m\n',sqrt(mean((Y(:,j)-yobj).^2)),max(abs(rad2deg(U(:,j)))),max(abs(D(:,j))));
 end
-figure; pzmap(Gm,Gd); grid on; legend(etiquetas); title('Plantas de posicion');
-figure; plot(t,ref,'k--',t,yobj,':',t,Y,'LineWidth',1.4); grid on; xlabel('Tiempo [s]'); ylabel('Posicion [m]'); legend('Referencia','Objetivo IMC',etiquetas{:}); title('Seguimiento IMC');
-figure; plot(t,rad2deg(U),'LineWidth',1.4); grid on; xlabel('Tiempo [s]'); ylabel('Control [grados]'); legend(etiquetas); title('Accion de control');
-figure; stairs(t,rad2deg(du)); grid on; xlabel('Tiempo [s]'); ylabel('Perturbacion [grados]');
-figure; plot(t,D,'LineWidth',1.4); grid on; xlabel('Tiempo [s]'); ylabel('Desviacion [m]'); legend(etiquetas); title('Respuesta a perturbacion de entrada');
-figure; plot(t,ref,'k--',t,Ytotal,'LineWidth',1.4); grid on; xlabel('Tiempo [s]'); ylabel('Posicion [m]'); legend('Referencia',etiquetas{:}); title('Seguimiento con perturbacion');
+%% Mapa de polos y ceros de los modelos de posicion
 
-zgrid off;
+% Obtener polos y ceros
+p_BJ = pole(Gm);
+z_BJ = zero(Gm);
 
+p_ZOH = pole(Gd);
+z_ZOH = zero(Gd);
+
+% Colores
+c_BJ = [0 0.4470 0.7410];
+c_ZOH = [0.8500 0.3250 0.0980];
+
+fig_pz = figure('Color','w');
+hold on;
 grid on;
+box on;
+
+% Circunferencia unitaria
+ang = linspace(0,2*pi,500);
+
+plot(cos(ang),sin(ang),'k--', ...
+    'LineWidth',1.2, ...
+    'HandleVisibility','off');
+
+% Ejes real e imaginario
+xline(0,'k:','HandleVisibility','off');
+yline(0,'k:','HandleVisibility','off');
+
+% Polos BJ LC
+h1 = plot(real(p_BJ),imag(p_BJ),'x', ...
+    'Color',c_BJ, ...
+    'MarkerSize',11, ...
+    'LineWidth',2);
+
+% Ceros BJ LC
+h2 = plot(real(z_BJ),imag(z_BJ),'o', ...
+    'Color',c_BJ, ...
+    'MarkerSize',10, ...
+    'LineWidth',2);
+
+% Polos nominal ZOH
+h3 = plot(real(p_ZOH),imag(p_ZOH),'+', ...
+    'Color',c_ZOH, ...
+    'MarkerSize',9, ...
+    'LineWidth',2);
+
+% Ceros nominal ZOH
+h4 = plot(real(z_ZOH),imag(z_ZOH),'o', ...
+    'Color',c_ZOH, ...
+    'MarkerSize',7, ...
+    'LineWidth',2);
+
 axis equal;
 
 xlabel('Parte real');
@@ -113,13 +156,25 @@ ylabel('Parte imaginaria');
 
 title('Polos y ceros de los modelos de posición');
 
-legend('Identificado BJ LC', ...
-       'Nominal ZOH', ...
-       'Location', 'best');
+legend([h1 h2 h3 h4], ...
+    {'Polos BJ LC', ...
+     'Ceros BJ LC', ...
+     'Polos nominal ZOH', ...
+     'Ceros nominal ZOH'}, ...
+    'Location','best');
 
-exportgraphics(gcf, ...
+set(gca,'FontSize',12);
+
+hold off;
+
+exportgraphics(fig_pz, ...
     'polos_ceros_imc.png', ...
-    'Resolution', 300);
+    'Resolution',300);
+figure; plot(t,ref,'k--',t,yobj,':',t,Y,'LineWidth',1.4); grid on; xlabel('Tiempo [s]'); ylabel('Posicion [m]'); legend('Referencia','Objetivo IMC',etiquetas{:}); title('Seguimiento IMC');
+figure; plot(t,rad2deg(U),'LineWidth',1.4); grid on; xlabel('Tiempo [s]'); ylabel('Control [grados]'); legend(etiquetas); title('Accion de control');
+figure; stairs(t,rad2deg(du)); grid on; xlabel('Tiempo [s]'); ylabel('Perturbacion [grados]');
+figure; plot(t,D,'LineWidth',1.4); grid on; xlabel('Tiempo [s]'); ylabel('Desviacion [m]'); legend(etiquetas); title('Respuesta a perturbacion de entrada');
+figure; plot(t,ref,'k--',t,Ytotal,'LineWidth',1.4); grid on; xlabel('Tiempo [s]'); ylabel('Posicion [m]'); legend('Referencia',etiquetas{:}); title('Seguimiento con perturbacion');
 
 %% Funciones locales
 function [u,v]=ensayo(e,Ts,m,b,g,q0,q1,ks,Kp,LC)
