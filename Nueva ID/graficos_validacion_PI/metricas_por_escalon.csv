@@ -1,0 +1,97 @@
+Ensayo,Controlador,Inicio_s,Salto_m,Duracion_s,Sobreimpulso_pct,Ts2_s
+Ensayo largo,Registro Wemos,7.500086,0.2,1.449997,14.75,NaN
+Ensayo largo,Registro Wemos,9.000089,-0.2,1.449996,15.65,NaN
+Ensayo largo,Registro Wemos,10.50008,0.2,1.449987,16.16,NaN
+Ensayo largo,Registro Wemos,12.000098,-0.2,1.449977,15.28,NaN
+Ensayo largo,Registro Wemos,13.500088,0.2,1.449966,17.585,NaN
+Ensayo largo,Registro Wemos,15.00008,-0.2,2.950002,15.36,NaN
+Ensayo largo,Registro Wemos,18.000093,0.2,2.949989,15.295,NaN
+Ensayo largo,Registro Wemos,21.000079,-0.2,2.949996,15.945,NaN
+Ensayo largo,Registro Wemos,24.000081,0.2,1.449996,14.635,NaN
+Ensayo largo,Registro Wemos,25.500075,-0.2,4.450018,16.31,NaN
+Ensayo largo,Registro Wemos,30.000086,0.2,1.45,14.93,NaN
+Ensayo largo,Registro Wemos,31.500082,-0.2,2.950011,15.62,NaN
+Ensayo largo,Registro Wemos,34.500067,0.2,1.450021,15.055,NaN
+Ensayo largo,Registro Wemos,36.000078,-0.2,1.450015,15.27,NaN
+Ensayo largo,Registro Wemos,37.500082,0.2,2.949995,16.12,NaN
+Ensayo largo,Registro Wemos,40.500082,-0.2,1.449997,14.8,NaN
+Ensayo largo,Registro Wemos,42.000094,0.2,2.949988,16.495,NaN
+Ensayo largo,Registro Wemos,45.000071,-0.2,4.449999,14.64,NaN
+Ensayo largo,Registro Wemos,49.500059,0.2,4.45003,14.455,NaN
+Ensayo largo,Registro Wemos,54.000074,-0.2,1.450013,16.295,NaN
+Ensayo largo,Registro Wemos,55.500091,0.2,1.449995,16.42,NaN
+Ensayo largo,Registro Wemos,57.000098,-0.2,2.949978,16.22,NaN
+Ensayo largo,Registro Wemos,60.000062,0.1,0,NaN,NaN
+Ensayo largo,PI inicial,7.500086,0.2,1.449997,0,NaN
+Ensayo largo,PI inicial,9.000089,-0.2,1.449996,0,NaN
+Ensayo largo,PI inicial,10.50008,0.2,1.449987,0,NaN
+Ensayo largo,PI inicial,12.000098,-0.2,1.449977,0,NaN
+Ensayo largo,PI inicial,13.500088,0.2,1.449966,0,NaN
+Ensayo largo,PI inicial,15.00008,-0.2,2.950002,2.8475304250264,NaN
+Ensayo largo,PI inicial,18.000093,0.2,2.949989,4.39794650433446,NaN
+Ensayo largo,PI inicial,21.000079,-0.2,2.949996,3.28754043827576,NaN
+Ensayo largo,PI inicial,24.000081,0.2,1.449996,0,NaN
+Ensayo largo,PI inicial,25.500075,-0.2,4.450018,2.99967309553138,NaN
+Ensayo largo,PI inicial,30.000086,0.2,1.45,0,NaN
+Ensayo largo,PI inicial,31.500082,-0.2,2.950011,2.57966791248443,NaN
+Ensayo largo,PI inicial,34.500067,0.2,1.450021,0,NaN
+Ensayo largo,PI inicial,36.000078,-0.2,1.450015,0,NaN
+Ensayo largo,PI inicial,37.500082,0.2,2.949995,4.27261007449582,NaN
+Ensayo largo,PI inicial,40.500082,-0.2,1.449997,0,NaN
+Ensayo largo,PI inicial,42.000094,0.2,2.949988,3.62034265173643,NaN
+Ensayo largo,PI inicial,45.000071,-0.2,4.449999,3.83486595162069,NaN
+Ensayo largo,PI inicial,49.500059,0.2,4.45003,4.08396836711237,NaN
+Ensayo largo,PI inicial,54.000074,-0.2,1.450013,0,NaN
+Ensayo largo,PI inicial,55.500091,0.2,1.449995,0,NaN
+Ensayo largo,PI inicial,57.000098,-0.2,2.949978,3.79287869595478,NaN
+Ensayo largo,PI inicial,60.000062,0.1,0,NaN,NaN
+Ensayo largo,PI-SIMC,7.500086,0.2,1.449997,0,NaN
+Ensayo largo,PI-SIMC,9.000089,-0.2,1.449996,0,NaN
+Ensayo largo,PI-SIMC,10.50008,0.2,1.449987,0,NaN
+Ensayo largo,PI-SIMC,12.000098,-0.2,1.449977,0,NaN
+Ensayo largo,PI-SIMC,13.500088,0.2,1.449966,0,NaN
+Ensayo largo,PI-SIMC,15.00008,-0.2,2.950002,1.57402113369273,2.600006
+Ensayo largo,PI-SIMC,18.000093,0.2,2.949989,4.2151121269679,NaN
+Ensayo largo,PI-SIMC,21.000079,-0.2,2.949996,1.73269367706674,2.649992
+Ensayo largo,PI-SIMC,24.000081,0.2,1.449996,0,NaN
+Ensayo largo,PI-SIMC,25.500075,-0.2,4.450018,6.90245707106727,NaN
+Ensayo largo,PI-SIMC,30.000086,0.2,1.45,0,NaN
+Ensayo largo,PI-SIMC,31.500082,-0.2,2.950011,0,NaN
+Ensayo largo,PI-SIMC,34.500067,0.2,1.450021,0,NaN
+Ensayo largo,PI-SIMC,36.000078,-0.2,1.450015,0,NaN
+Ensayo largo,PI-SIMC,37.500082,0.2,2.949995,5.64648521492744,NaN
+Ensayo largo,PI-SIMC,40.500082,-0.2,1.449997,0,NaN
+Ensayo largo,PI-SIMC,42.000094,0.2,2.949988,1.73821183165693,2.549991
+Ensayo largo,PI-SIMC,45.000071,-0.2,4.449999,10.8180791445963,NaN
+Ensayo largo,PI-SIMC,49.500059,0.2,4.45003,10.8643579192057,NaN
+Ensayo largo,PI-SIMC,54.000074,-0.2,1.450013,0,NaN
+Ensayo largo,PI-SIMC,55.500091,0.2,1.449995,0,NaN
+Ensayo largo,PI-SIMC,57.000098,-0.2,2.949978,5.19145814343048,NaN
+Ensayo largo,PI-SIMC,60.000062,0.1,0,NaN,NaN
+Ensayo largo,PI-IFT,7.500086,0.2,1.449997,0,NaN
+Ensayo largo,PI-IFT,9.000089,-0.2,1.449996,0,NaN
+Ensayo largo,PI-IFT,10.50008,0.2,1.449987,0,NaN
+Ensayo largo,PI-IFT,12.000098,-0.2,1.449977,0,NaN
+Ensayo largo,PI-IFT,13.500088,0.2,1.449966,0,NaN
+Ensayo largo,PI-IFT,15.00008,-0.2,2.950002,0,NaN
+Ensayo largo,PI-IFT,18.000093,0.2,2.949989,0,NaN
+Ensayo largo,PI-IFT,21.000079,-0.2,2.949996,0,NaN
+Ensayo largo,PI-IFT,24.000081,0.2,1.449996,0,NaN
+Ensayo largo,PI-IFT,25.500075,-0.2,4.450018,0,3.100008
+Ensayo largo,PI-IFT,30.000086,0.2,1.45,0,NaN
+Ensayo largo,PI-IFT,31.500082,-0.2,2.950011,0,NaN
+Ensayo largo,PI-IFT,34.500067,0.2,1.450021,0,NaN
+Ensayo largo,PI-IFT,36.000078,-0.2,1.450015,0,NaN
+Ensayo largo,PI-IFT,37.500082,0.2,2.949995,0,NaN
+Ensayo largo,PI-IFT,40.500082,-0.2,1.449997,0,NaN
+Ensayo largo,PI-IFT,42.000094,0.2,2.949988,0,NaN
+Ensayo largo,PI-IFT,45.000071,-0.2,4.449999,0,3.149999
+Ensayo largo,PI-IFT,49.500059,0.2,4.45003,0,3.15002399999999
+Ensayo largo,PI-IFT,54.000074,-0.2,1.450013,0,NaN
+Ensayo largo,PI-IFT,55.500091,0.2,1.449995,0,NaN
+Ensayo largo,PI-IFT,57.000098,-0.2,2.949978,0,NaN
+Ensayo largo,PI-IFT,60.000062,0.1,0,NaN,NaN
+Escalon 2,Registro Wemos,2.950072,-0.1,0,NaN,NaN
+Escalon 2,PI inicial,2.950072,-0.1,0,NaN,NaN
+Escalon 2,PI-SIMC,2.950072,-0.1,0,NaN,NaN
+Escalon 2,PI-IFT,2.950072,-0.1,0,NaN,NaN
